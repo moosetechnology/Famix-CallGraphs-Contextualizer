@@ -51,6 +51,7 @@ CGContextualizer >> apply: aCSModel on: aGraph [
 CGContextualizer >> buildGraph [
 
 	| workspace |
+	graph ifNotNil: [ ^ graph ].
 	workspace := MooseWorkspace new mainModel: mainModel.
 	librariesModels do: [ :each | workspace addLibraryModel: each ].
 
@@ -83,7 +84,8 @@ CGContextualizer >> createReflectivesHookOn: aGraphBuilder withWorkspace: worksp
 
 { #category : 'settings' }
 CGContextualizer >> entryPoints: aCollection [
-
+	"Reset graph when entrypoints change"
+	graph := nil.
 	entryPoints := aCollection
 ]
 
@@ -131,12 +133,18 @@ CGContextualizer >> initialize [
 
 { #category : 'settings' }
 CGContextualizer >> librariesModels: aCollection [
+	"Reset graph when librariesModels change"
 
-	librariesModels := aCollection asMooseGroup 
+	graph := nil.
+
+	librariesModels := aCollection asMooseGroup
 ]
 
 { #category : 'settings' }
 CGContextualizer >> mainModel: aFamixModel [
+	"Reset graph when main model change"
+
+	graph := nil.
 
 	mainModel := aFamixModel
 ]
