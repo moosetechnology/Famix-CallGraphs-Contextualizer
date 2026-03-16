@@ -65,6 +65,9 @@ CGContextualizer >> buildGraph [
 
 { #category : 'settings' }
 CGContextualizer >> callStackModels: aCollection [
+	"Reset graph when callStackModels change"
+
+	graph := nil.
 
 	callStackModels := aCollection
 ]
