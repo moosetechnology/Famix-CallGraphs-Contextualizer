@@ -30,7 +30,6 @@ CGContextualizerExample2Test >> testInferedBuildGraph [
 	nodes := self inferedContextualizer buildGraph
 		         findPathFromNodeNamed: 'example2.A2.main(String[])'
 		         toNodeNamed: 'example2.A2.endPoint()'.
-	self halt.
 
 	methodsName := nodes collect: [ :each | each realMethod mooseName ].
 
