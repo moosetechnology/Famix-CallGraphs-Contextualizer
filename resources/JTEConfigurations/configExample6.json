@@ -1,0 +1,25 @@
+{
+	"vm": {
+		"host": "localhost",
+		"port": "5006"
+	},
+	"entrypoint": {
+		"className": "example6.A6",
+		"methodName": "main",
+		"methodArguments": [
+			"java.lang.String[]"
+		],
+		"repBefore": 0
+	},
+	"endpoint": {
+		"className": "example6.A6",
+		"methodName": "endPoint",
+		"methodArguments": [],
+		"repBefore": 0
+	},
+	"maxObjectDepth" : 14,
+	"logging": {
+		"outputName" : "example6",
+		"extension": "tr"
+	}
+}
