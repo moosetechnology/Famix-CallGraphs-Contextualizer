@@ -18,11 +18,11 @@ Class {
 	#instVars : [
 		'mainModel',
 		'librariesModels',
-		'callStackModels',
 		'graph',
 		'entryPoints',
 		'graphBuilder',
-		'tracedNodesPerCallStackModel'
+		'tracesModels',
+		'tracedNodesPerTraceModel'
 	],
 	#category : 'Famix-CallGraphs-Contextualizer',
 	#package : 'Famix-CallGraphs-Contextualizer'
@@ -35,16 +35,16 @@ CGContextualizer class >> apply: aCSModel on: aGraph [
 ]
 
 { #category : 'as yet unclassified' }
-CGContextualizer >> apply: aCSModel on: aGraph [
+CGContextualizer >> apply: aTraceModel on: aGraph [
 
-	| callStackSequence tracedNodes |
-	"Collecting all methods on the stack in order of the stack"
-	callStackSequence := self collectCallStackMethodsFrom: aCSModel.
+	| traceSequence tracedNodes |
+	"Collecting all methods on the trace in order of the stack"
+	traceSequence := self collectTraceMethodsFrom: aTraceModel.
 
 	"Add additionnals properties on the graph"
-	tracedNodes := self tracePath: callStackSequence in: aGraph.
+	tracedNodes := self tracePath: traceSequence in: aGraph.
 
-	tracedNodesPerCallStackModel at: aCSModel put: tracedNodes.
+	tracedNodesPerTraceModel at: aTraceModel put: tracedNodes.
 ]
 
 { #category : 'as yet unclassified' }
@@ -65,18 +65,18 @@ CGContextualizer >> buildGraph [
 
 { #category : 'settings' }
 CGContextualizer >> callStackModels: aCollection [
-	"Reset graph when callStackModels change"
+	"Reset graph when trace models changes"
 
 	graph := nil.
 
-	callStackModels := aCollection
+	tracesModels := aCollection
 ]
 
 { #category : 'as yet unclassified' }
-CGContextualizer >> collectCallStackMethodsFrom: aCSModel [
-	"stacklines should be ordered by default"
+CGContextualizer >> collectTraceMethodsFrom: aTraceModel [
+	"elements should be ordered by default"
 
-	^ (aCSModel allWithType: FamixCSStack) anyOne stacklines collect: [ :each | each method ]
+	^ (aTraceModel allWithType: FamixJTTrace) anyOne traceElements collect: [ :each | each method ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -131,7 +131,7 @@ CGContextualizer >> initialNodeFor: aGraph [
 CGContextualizer >> initialize [
 
 	graphBuilder := FamixJavaCHABuilder new.
-	tracedNodesPerCallStackModel := Dictionary new
+	tracedNodesPerTraceModel := Dictionary new
 ]
 
 { #category : 'settings' }
@@ -163,13 +163,13 @@ CGContextualizer >> run [
 
 	self buildGraph.
 
-	callStackModels do: [ :each | self apply: each on: graph ].
+	tracesModels do: [ :each | self apply: each on: graph ].
 
-	^ tracedNodesPerCallStackModel
+	^ tracedNodesPerTraceModel
 ]
 
 { #category : 'as yet unclassified' }
-CGContextualizer >> tracePath: callStackSequence in: aGraph [
+CGContextualizer >> tracePath: traceSequence in: aGraph [
 
 	| currentNode tracedNodes |
 	"Stores all traced nodes"
@@ -179,7 +179,7 @@ CGContextualizer >> tracePath: callStackSequence in: aGraph [
 	currentNode := self initialNodeFor: aGraph. 
 
 	"Iterate on all stacks"
-	callStackSequence do: [ :targetMethod |
+	traceSequence do: [ :targetMethod |
 			currentNode := self findNodeFor: targetMethod from: currentNode in: aGraph.
 
 			"If nil then its not possible to continue"
@@ -193,13 +193,13 @@ CGContextualizer >> tracePath: callStackSequence in: aGraph [
 ]
 
 { #category : 'as yet unclassified' }
-CGContextualizer >> tracedNodesForCallStackModel: aCSModel [
+CGContextualizer >> tracedNodesPerTraceModel [
 
-	^ tracedNodesPerCallStackModel at: aCSModel ifPresent: [ :nodes | self formatTracedNodes: nodes ] ifAbsent: [ nil ]
+	^ tracedNodesPerTraceModel
 ]
 
 { #category : 'as yet unclassified' }
-CGContextualizer >> tracedNodesPerCallStackModel [
+CGContextualizer >> tracedNodesPerTraceModel: aCSModel [
 
-	^ tracedNodesPerCallStackModel
+	^ tracedNodesPerTraceModel at: aCSModel ifPresent: [ :nodes | self formatTracedNodes: nodes ] ifAbsent: [ nil ]
 ]

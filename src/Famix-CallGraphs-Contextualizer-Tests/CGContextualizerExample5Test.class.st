@@ -7,10 +7,10 @@ Class {
 }
 
 { #category : 'tests' }
-CGContextualizerExample5Test >> testCollectStackMethodsFrom [
+CGContextualizerExample5Test >> testCollectTraceMethodsFrom [
 
 	| methods methodsName |
-	methods := CGContextualizer new collectCallStackMethodsFrom: self callStackModel.
+	methods := CGContextualizer new collectTraceMethodsFrom: self traceModel.
 
 	self assert: methods size equals: 3.
 
@@ -18,7 +18,7 @@ CGContextualizerExample5Test >> testCollectStackMethodsFrom [
 
 	self assert: methodsName first equals: 'example5.A5.main(String[])'.
 	self assert: methodsName second equals: 'example5.C5.method()'.
-	self assert: methodsName third equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName third equals: 'example5.C5.endPoint()'
 ]
 
 { #category : 'tests' }
@@ -28,20 +28,20 @@ CGContextualizerExample5Test >> testInferedBuildGraph [
 	| nodes methodsName |
 	nodes := self inferedContextualizer buildGraph
 		         findPathFromNodeNamed: 'example5.A5.main(String[])'
-		         toNodeNamed: 'java.lang.Runtime.exec(String)'.
+		         toNodeNamed: 'example5.C5.endPoint()'.
 
 	methodsName := nodes collect: [ :each | each realMethod mooseName ].
 
 	self assert: methodsName first equals: 'example5.A5.main(String[])'.
 	self assert: methodsName second equals: 'example5.C5.method()'.
-	self assert: methodsName third equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName third equals: 'example5.C5.endPoint()'
 ]
 
 { #category : 'tests' }
 CGContextualizerExample5Test >> testInferedRun [
 
 	| tracedNodes methodsName |
-	tracedNodes := self inferedContextualizer run at: self callStackModel.
+	tracedNodes := self inferedContextualizer run at: self traceModel.
 
 	methodsName := tracedNodes collect: [ :each | each realMethod mooseName ].
 
@@ -49,7 +49,7 @@ CGContextualizerExample5Test >> testInferedRun [
 
 	self assert: methodsName first equals: 'example5.A5.main(String[])'.
 	self assert: methodsName second equals: 'example5.C5.method()'.
-	self assert: methodsName third equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName third equals: 'example5.C5.endPoint()'
 ]
 
 { #category : 'tests' }
@@ -59,7 +59,7 @@ CGContextualizerExample5Test >> testStrictBuildGraph [
 	| nodes methodsName |
 	nodes := self strictContextualizer buildGraph
 		         findPathFromNodeNamed: 'example5.A5.main(String[])'
-		         toNodeNamed: 'java.lang.Runtime.exec(String)'.
+		         toNodeNamed: 'example5.C5.endPoint()'.
 
 	methodsName := nodes collect: [ :each | each realMethod mooseName ].
 
@@ -67,14 +67,14 @@ CGContextualizerExample5Test >> testStrictBuildGraph [
 
 	self assert: methodsName first equals: 'example5.A5.main(String[])'.
 	self assert: methodsName second equals: 'example5.C5.method()'.
-	self assert: methodsName third equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName third equals: 'example5.C5.endPoint()'
 ]
 
 { #category : 'tests' }
 CGContextualizerExample5Test >> testStrictRun [
 
 	| tracedNodes methodsName |
-	tracedNodes := self strictContextualizer run at: self callStackModel.
+	tracedNodes := self strictContextualizer run at: self traceModel.
 
 	methodsName := tracedNodes collect: [ :each | each realMethod mooseName ].
 
@@ -82,5 +82,5 @@ CGContextualizerExample5Test >> testStrictRun [
 
 	self assert: methodsName first equals: 'example5.A5.main(String[])'.
 	self assert: methodsName second equals: 'example5.C5.method()'.
-	self assert: methodsName third equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName third equals: 'example5.C5.endPoint()'
 ]

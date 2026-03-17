@@ -1,1 +1,10 @@
 .DS_Store
+
+# Compiled java files
+*.class
+
+# Generated jar
+Resources/sources/libsexample*/
+
+# Zip files
+*.zip

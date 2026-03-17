@@ -7,10 +7,10 @@ Class {
 }
 
 { #category : 'tests' }
-CGContextualizerExample3Test >> testCollectStackMethodsFrom [
+CGContextualizerExample3Test >> testCollectTraceMethodsFrom [
 
 	| methods methodsName |
-	methods := CGContextualizer new collectCallStackMethodsFrom: self callStackModel.
+	methods := CGContextualizer new collectTraceMethodsFrom: self traceModel.
 
 	self assert: methods size equals: 4.
 
@@ -19,7 +19,7 @@ CGContextualizerExample3Test >> testCollectStackMethodsFrom [
 	self assert: methodsName first equals: 'example3.A3.main(String[])'.
 	self assert: methodsName second equals: 'example3External.B3.method(Object)'.
 	self assert: methodsName third equals: 'example3.A3.toString()'.
-	self assert: methodsName fourth equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName fourth equals: 'example3.A3.endPoint()'
 ]
 
 { #category : 'tests' }
@@ -29,7 +29,7 @@ CGContextualizerExample3Test >> testInferedBuildGraph [
 	| nodes methodsName |
 	nodes := self inferedContextualizer buildGraph
 		         findPathFromNodeNamed: 'example3.A3.main(String[])'
-		         toNodeNamed: 'java.lang.Runtime.exec(String)'.
+		         toNodeNamed: 'example3.A3.endPoint()'.
 
 	methodsName := nodes collect: [ :each | each realMethod mooseName ].
 
@@ -38,14 +38,14 @@ CGContextualizerExample3Test >> testInferedBuildGraph [
 	self assert: methodsName first equals: 'example3.A3.main(String[])'.
 	self assert: methodsName second equals: 'example3External.B3.method(Object)'.
 	self assert: methodsName third equals: 'example3.A3.toString()'.
-	self assert: methodsName fourth equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName fourth equals: 'example3.A3.endPoint()'
 ]
 
 { #category : 'tests' }
 CGContextualizerExample3Test >> testInferedRun [
 
 	| tracedNodes methodsName |
-	tracedNodes := self inferedContextualizer run at: self callStackModel.
+	tracedNodes := self inferedContextualizer run at: self traceModel.
 
 	methodsName := tracedNodes collect: [ :each | each realMethod mooseName ].
 
@@ -54,7 +54,7 @@ CGContextualizerExample3Test >> testInferedRun [
 	self assert: methodsName first equals: 'example3.A3.main(String[])'.
 	self assert: methodsName second equals: 'example3External.B3.method(Object)'.
 	self assert: methodsName third equals: 'example3.A3.toString()'.
-	self assert: methodsName fourth equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName fourth equals: 'example3.A3.endPoint()'
 ]
 
 { #category : 'tests' }
@@ -64,7 +64,7 @@ CGContextualizerExample3Test >> testStrictBuildGraph [
 	| nodes methodsName |
 	nodes := self strictContextualizer buildGraph
 		         findPathFromNodeNamed: 'example3.A3.main(String[])'
-		         toNodeNamed: 'java.lang.Runtime.exec(String)'.
+		         toNodeNamed: 'example3.A3.endPoint()'.
 
 	methodsName := nodes collect: [ :each | each realMethod mooseName ].
 
@@ -73,14 +73,14 @@ CGContextualizerExample3Test >> testStrictBuildGraph [
 	self assert: methodsName first equals: 'example3.A3.main(String[])'.
 	self assert: methodsName second equals: 'example3External.B3.method(Object)'.
 	self assert: methodsName third equals: 'example3.A3.toString()'.
-	self assert: methodsName fourth equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName fourth equals: 'example3.A3.endPoint()'
 ]
 
 { #category : 'tests' }
 CGContextualizerExample3Test >> testStrictRun [
 
 	| tracedNodes methodsName |
-	tracedNodes := self strictContextualizer run at: self callStackModel.
+	tracedNodes := self strictContextualizer run at: self traceModel.
 	methodsName := tracedNodes collect: [ :each | each realMethod mooseName ].
 
 	self assert: tracedNodes size equals: 4.
@@ -88,5 +88,5 @@ CGContextualizerExample3Test >> testStrictRun [
 	self assert: methodsName first equals: 'example3.A3.main(String[])'.
 	self assert: methodsName second equals: 'example3External.B3.method(Object)'.
 	self assert: methodsName third equals: 'example3.A3.toString()'.
-	self assert: methodsName fourth equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName fourth equals: 'example3.A3.endPoint()'
 ]
