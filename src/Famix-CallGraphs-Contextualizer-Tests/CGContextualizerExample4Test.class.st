@@ -7,10 +7,10 @@ Class {
 }
 
 { #category : 'tests' }
-CGContextualizerExample4Test >> testCollectStackMethodsFrom [
+CGContextualizerExample4Test >> testCollectTraceMethodsFrom [
 
 	| methods methodsName |
-	methods := CGContextualizer new collectCallStackMethodsFrom: self callStackModel.
+	methods := CGContextualizer new collectTraceMethodsFrom: self traceModel.
 
 	self assert: methods size equals: 4.
 
@@ -19,7 +19,7 @@ CGContextualizerExample4Test >> testCollectStackMethodsFrom [
 	self assert: methodsName first equals: 'example4.A4.main(String[])'.
 	self assert: methodsName second equals: 'example4External.B4.toString()'.
 	self assert: methodsName third equals: 'example4.A4.toString()'.
-	self assert: methodsName fourth equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName fourth equals: 'example4.A4.endPoint()'
 ]
 
 { #category : 'tests' }
@@ -29,7 +29,7 @@ CGContextualizerExample4Test >> testInferedBuildGraph [
 	| nodes methodsName |
 	nodes := self inferedContextualizer buildGraph
 		         findPathFromNodeNamed: 'example4.A4.main(String[])'
-		         toNodeNamed: 'java.lang.Runtime.exec(String)'.
+		         toNodeNamed: 'example4.A4.endPoint()'.
 
 	methodsName := nodes collect: [ :each | each realMethod mooseName ].
 
@@ -38,14 +38,14 @@ CGContextualizerExample4Test >> testInferedBuildGraph [
 	self assert: methodsName first equals: 'example4.A4.main(String[])'.
 	self assert: methodsName second equals: 'example4External.B4.toString()'.
 	self assert: methodsName third equals: 'example4.A4.toString()'.
-	self assert: methodsName fourth equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName fourth equals: 'example4.A4.endPoint()'
 ]
 
 { #category : 'tests' }
 CGContextualizerExample4Test >> testInferedRun [
 
 	| tracedNodes methodsName |
-	tracedNodes := self inferedContextualizer run at: self callStackModel.
+	tracedNodes := self inferedContextualizer run at: self traceModel.
 
 	methodsName := tracedNodes collect: [ :each | each realMethod mooseName ].
 
@@ -54,7 +54,7 @@ CGContextualizerExample4Test >> testInferedRun [
 	self assert: methodsName first equals: 'example4.A4.main(String[])'.
 	self assert: methodsName second equals: 'example4External.B4.toString()'.
 	self assert: methodsName third equals: 'example4.A4.toString()'.
-	self assert: methodsName fourth equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName fourth equals: 'example4.A4.endPoint()'
 ]
 
 { #category : 'tests' }
@@ -64,7 +64,7 @@ CGContextualizerExample4Test >> testStrictBuildGraph [
 	| nodes methodsName |
 	nodes := self strictContextualizer buildGraph
 		          findPathFromNodeNamed: 'example4.A4.main(String[])'
-		         toNodeNamed: 'java.lang.Runtime.exec(String)'.
+		         toNodeNamed: 'example4.A4.endPoint()'.
 
 	methodsName := nodes collect: [ :each | each realMethod mooseName ].
 
@@ -73,7 +73,7 @@ CGContextualizerExample4Test >> testStrictBuildGraph [
 	self assert: methodsName first equals: 'example4.A4.main(String[])'.
 	self assert: methodsName second equals: 'example4External.B4.toString()'.
 	self assert: methodsName third equals: 'example4.A4.toString()'.
-	self assert: methodsName fourth equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName fourth equals: 'example4.A4.endPoint()'
 ]
 
 { #category : 'tests' }
@@ -81,7 +81,7 @@ CGContextualizerExample4Test >> testStrictRun [
 
 	| tracedNodes methodsName |
 	"Here the result is not the same as the stack because we do not have access to the external dependencies on the graph"
-	tracedNodes := self strictContextualizer run at: self callStackModel.
+	tracedNodes := self strictContextualizer run at: self traceModel.
 
 	methodsName := tracedNodes collect: [ :each | each realMethod mooseName ].
 
@@ -90,5 +90,5 @@ CGContextualizerExample4Test >> testStrictRun [
 	self assert: methodsName first equals: 'example4.A4.main(String[])'.
 	self assert: methodsName second equals: 'example4External.B4.toString()'.
 	self assert: methodsName third equals: 'example4.A4.toString()'.
-	self assert: methodsName fourth equals: 'java.lang.Runtime.exec(String)'
+	self assert: methodsName fourth equals: 'example4.A4.endPoint()'
 ]

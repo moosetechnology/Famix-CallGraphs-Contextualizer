@@ -8,8 +8,8 @@ Class {
 { #category : 'as yet unclassified' }
 CGInferedContextualizer >> createReflectivesHookOn: aGraphBuilder withWorkspace: workspace [
 
-	| stacklines modelMethodNames |
-	stacklines := callStackModels flatCollect: [ :each | each allWithType: FamixCSStackline ].
+	| elements modelMethodNames |
+	elements := tracesModels flatCollect: [ :each | each allWithType: FamixJTTraceElement ].
 
 	"Convert to Set to ensure O(1) lookup performance inside the reflective hook"
 	modelMethodNames := (({ mainModel } , librariesModels flatCollect: [ :each | each allMethods ]) reject: [ :each |
@@ -21,7 +21,7 @@ CGInferedContextualizer >> createReflectivesHookOn: aGraphBuilder withWorkspace:
 					currentMooseName := node realMethod mooseName.
 
 					"Extract the methods from the execution trace"
-					nextDynamicMethods := (stacklines
+					nextDynamicMethods := (elements
 						                       select: [ :stackline | stackline method mooseName = currentMooseName ]
 						                       thenCollect: [ :stackline | stackline next ifNotNil: #method ]) reject: #isNil.
 

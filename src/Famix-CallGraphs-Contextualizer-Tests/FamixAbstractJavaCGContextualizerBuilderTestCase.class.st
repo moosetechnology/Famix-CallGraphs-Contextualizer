@@ -34,12 +34,6 @@ FamixAbstractJavaCGContextualizerBuilderTestCase class >> sourceResource [
 	^ self resources anyOne current
 ]
 
-{ #category : 'helpers' }
-FamixAbstractJavaCGContextualizerBuilderTestCase >> callStackModel [
-
-	^ self sourceResource callStackModel
-]
-
 { #category : 'running' }
 FamixAbstractJavaCGContextualizerBuilderTestCase >> createContextualizer: aContextualizerClass [
 
@@ -47,7 +41,7 @@ FamixAbstractJavaCGContextualizerBuilderTestCase >> createContextualizer: aConte
 		  mainModel: self sourceResource javaMainModel;
 		  librariesModels: self sourceResource librariesModels;
 		  entryPoints: self sourceResource entryPoints;
-		  callStackModels: { self callStackModel };
+		  callStackModels: { self traceModel };
 		  yourself
 ]
 
@@ -81,4 +75,10 @@ FamixAbstractJavaCGContextualizerBuilderTestCase >> sourceResource [
 FamixAbstractJavaCGContextualizerBuilderTestCase >> strictContextualizer [
 
 	^ self createContextualizer: CGStrictContextualizer
+]
+
+{ #category : 'helpers' }
+FamixAbstractJavaCGContextualizerBuilderTestCase >> traceModel [
+
+	^ self sourceResource traceModel
 ]

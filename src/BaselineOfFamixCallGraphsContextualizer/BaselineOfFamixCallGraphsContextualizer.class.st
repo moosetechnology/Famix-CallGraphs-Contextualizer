@@ -14,7 +14,7 @@ BaselineOfFamixCallGraphsContextualizer >> baseline: spec [
 			self gitBridge: spec.
 			self famixBridge: spec.
 			self famixCallGraphs: spec.
-			self famixCallStacks: spec.
+			self famixJavaTrace: spec.
 			
 
 			"Packages"
@@ -41,9 +41,9 @@ BaselineOfFamixCallGraphsContextualizer >> famixCallGraphs: spec [
 ]
 
 { #category : 'dependencies' }
-BaselineOfFamixCallGraphsContextualizer >> famixCallStacks: spec [
+BaselineOfFamixCallGraphsContextualizer >> famixJavaTrace: spec [
 
-	spec baseline: 'FamixCallStack' with: [ spec repository: 'github://moosetechnology/FamixCallStack/src' ]
+	spec baseline: 'FamixJavaTrace' with: [ spec repository: 'github://LeoDefossez/Famix-JavaTrace/src' ]
 ]
 
 { #category : 'dependencies' }

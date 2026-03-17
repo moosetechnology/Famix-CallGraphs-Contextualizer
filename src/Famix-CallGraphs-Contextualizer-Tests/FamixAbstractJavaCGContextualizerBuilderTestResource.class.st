@@ -3,9 +3,9 @@ Class {
 	#superclass : 'TestResource',
 	#instVars : [
 		'graph',
-		'callStackModel',
 		'javaMainModel',
-		'librariesModels'
+		'librariesModels',
+		'traceModel'
 	],
 	#category : 'Famix-CallGraphs-Contextualizer-Tests-Resources',
 	#package : 'Famix-CallGraphs-Contextualizer-Tests',
@@ -50,19 +50,6 @@ FamixAbstractJavaCGContextualizerBuilderTestResource class >> buildExternalDepen
 
 	"Execute the built command"
 	LibC runCommand: cmd
-]
-
-{ #category : 'accessing' }
-FamixAbstractJavaCGContextualizerBuilderTestResource class >> callStackFile [
-	"Return the java file containing the sources to parse for those tests"
-
-	| file |
-	file := self sourcesFolder
-	        / (((self name withoutPrefix: 'CGContextualizer') withoutSuffix: 'Resource') uncapitalized , '.cs').
-
-	file ifAbsent: [ self error: 'File does not exists ' , file pathString ].
-
-	^ file
 ]
 
 { #category : 'as yet unclassified' }
@@ -138,15 +125,16 @@ FamixAbstractJavaCGContextualizerBuilderTestResource class >> sourcesFolder [
 ]
 
 { #category : 'accessing' }
-FamixAbstractJavaCGContextualizerBuilderTestResource >> callStackFile [
+FamixAbstractJavaCGContextualizerBuilderTestResource class >> traceFile [
+	"Return the java file containing the sources to parse for those tests"
 
-	^ self class callStackFile
-]
+	| file |
+	file := self sourcesFolder
+	        / (((self name withoutPrefix: 'CGContextualizer') withoutSuffix: 'Resource') uncapitalized , '.tr').
 
-{ #category : 'accessing' }
-FamixAbstractJavaCGContextualizerBuilderTestResource >> callStackModel [
+	file ifAbsent: [ self error: 'File does not exists ' , file pathString ].
 
-	^ callStackModel
+	^ file
 ]
 
 { #category : 'accessing' }
@@ -187,7 +175,7 @@ FamixAbstractJavaCGContextualizerBuilderTestResource >> setUp [
 		                  folders: { self javaSourcesFolder };
 		                  import) anyOne.
 
-	callStackModel := CallStackJsonReader import: self callStackFile.
+	traceModel := JavaTraceJsonReader import: self traceFile.
 
 	librariesModels := FamixJavaFoldersImporter new
 		                   folders: self javaExternalSourcesFolders;
@@ -199,8 +187,20 @@ FamixAbstractJavaCGContextualizerBuilderTestResource >> tearDown [
 
 	javaMainModel := nil.
 	graph := nil.
-	callStackModel := nil.
+	traceModel := nil.
 	librariesModels := nil.
 
 	super tearDown
+]
+
+{ #category : 'accessing' }
+FamixAbstractJavaCGContextualizerBuilderTestResource >> traceFile [
+
+	^ self class traceFile
+]
+
+{ #category : 'accessing' }
+FamixAbstractJavaCGContextualizerBuilderTestResource >> traceModel [
+
+	^ traceModel
 ]
