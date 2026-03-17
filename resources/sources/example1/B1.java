@@ -1,15 +1,15 @@
 package example1;
+
 public class B1 {
-    
-    public void method(){
-    }
 
-    public void method(String[] args){
-        try{
-            Runtime.getRuntime().exec("");
+	public void method() {
+	}
 
-        } catch(Exception e){}
-    }
+	public void method(String[] args) {
+		this.endPoint();
+	}
+
+	public void endPoint() {
+	}
 
 }
-
