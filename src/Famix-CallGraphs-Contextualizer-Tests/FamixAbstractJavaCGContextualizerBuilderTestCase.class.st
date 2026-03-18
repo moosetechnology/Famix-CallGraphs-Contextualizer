@@ -41,7 +41,7 @@ FamixAbstractJavaCGContextualizerBuilderTestCase >> createContextualizer: aConte
 		  mainModel: self sourceResource javaMainModel;
 		  librariesModels: self sourceResource librariesModels;
 		  entryPoints: self sourceResource entryPoints;
-		  callStackModels: { self traceModel };
+		  tracesModels: { self traceModel };
 		  yourself
 ]
 

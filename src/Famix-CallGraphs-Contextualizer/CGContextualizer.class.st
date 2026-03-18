@@ -63,15 +63,6 @@ CGContextualizer >> buildGraph [
 				           build ]
 ]
 
-{ #category : 'settings' }
-CGContextualizer >> callStackModels: aCollection [
-	"Reset graph when trace models changes"
-
-	graph := nil.
-
-	tracesModels := aCollection
-]
-
 { #category : 'as yet unclassified' }
 CGContextualizer >> collectTraceMethodsFrom: aTraceModel [
 	"elements should be ordered by default"
@@ -96,15 +87,16 @@ CGContextualizer >> entryPoints: aCollection [
 CGContextualizer >> findNodeFor: targetMethod from: currentNode in: aGraph [
 
 	^ currentNode callees detect: [ :each | each realMethod mooseName = targetMethod mooseName ] ifNone: [ nil ]
+	
 ]
 
 { #category : 'formatting' }
 CGContextualizer >> formatTracedNodes: tracedNodes [
-
+	
 	^ tracedNodes collect: [ :each |
 			  each -> {
-				  ('receiver' -> each additionalProperties values first stacklines first receiver).
-				  ('arguments' -> each additionalProperties values first stacklines first arguments) } ]
+				  ('receiver' -> each additionalProperties values first traceMethods first receiver).
+				  ('arguments' -> each additionalProperties values first traceMethods first arguments) } ]
 ]
 
 { #category : 'settings' }
@@ -202,4 +194,13 @@ CGContextualizer >> tracedNodesPerTraceModel [
 CGContextualizer >> tracedNodesPerTraceModel: aCSModel [
 
 	^ tracedNodesPerTraceModel at: aCSModel ifPresent: [ :nodes | self formatTracedNodes: nodes ] ifAbsent: [ nil ]
+]
+
+{ #category : 'settings' }
+CGContextualizer >> tracesModels: aCollection [
+	"Reset graph when trace models changes"
+
+	graph := nil.
+
+	tracesModels := aCollection
 ]
