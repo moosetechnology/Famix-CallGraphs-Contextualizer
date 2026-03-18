@@ -17,7 +17,7 @@ CGContextualizerExample7Test >> testCollectTraceMethodsFrom [
 	methodsName := methods collect: [ :each | each mooseName ].
 
 	self assert: methodsName first equals: 'example7.A7.main(String[])'.
-	self assert: methodsName second equals: 'example7.B7.method(String, A7)'.
+	self assert: methodsName second equals: 'example7.B7.method(T,A7)'.
 	self assert: methodsName third equals: 'example7.A7.endPoint()'
 ]
 
@@ -27,13 +27,13 @@ CGContextualizerExample7Test >> testInferedBuildGraph [
 
 	| nodes methodsName |
 	nodes := self inferedContextualizer buildGraph
-		         findPathFromNodeNamed: 'example6.A6.main(String[])'
-		         toNodeNamed: 'example6.A6.endPoint()'.
+		         findPathFromNodeNamed: 'example7.A7.main(String[])'
+		         toNodeNamed: 'example7.A7.endPoint()'.
 
 	methodsName := nodes collect: [ :each | each realMethod mooseName ].
 
 	self assert: methodsName first equals: 'example7.A7.main(String[])'.
-	self assert: methodsName second equals: 'example7.B7.method(String, A7)'.
+	self assert: methodsName second equals: 'example7.B7.method(T,A7)'.
 	self assert: methodsName third equals: 'example7.A7.endPoint()'
 ]
 
@@ -48,7 +48,7 @@ CGContextualizerExample7Test >> testInferedRun [
 	self assert: methodsName size equals: 3.
 
 	self assert: methodsName first equals: 'example7.A7.main(String[])'.
-	self assert: methodsName second equals: 'example7.B7.method(String, A7)'.
+	self assert: methodsName second equals: 'example7.B7.method(T,A7)'.
 	self assert: methodsName third equals: 'example7.A7.endPoint()'
 ]
 
@@ -58,15 +58,15 @@ CGContextualizerExample7Test >> testStrictBuildGraph [
 
 	| nodes methodsName |
 	nodes := self strictContextualizer buildGraph
-		         findPathFromNodeNamed: 'example6.A6.main(String[])'
-		         toNodeNamed: 'example6.A6.endPoint()'.
+		         findPathFromNodeNamed: 'example7.A7.main(String[])'
+		         toNodeNamed: 'example7.A7.endPoint()'.
 
 	methodsName := nodes collect: [ :each | each realMethod mooseName ].
 
 	self assert: methodsName size equals: 3.
 	
 	self assert: methodsName first equals: 'example7.A7.main(String[])'.
-	self assert: methodsName second equals: 'example7.B7.method(String, A7)'.
+	self assert: methodsName second equals: 'example7.B7.method(T,A7)'.
 	self assert: methodsName third equals: 'example7.A7.endPoint()'
 ]
 
@@ -81,6 +81,6 @@ CGContextualizerExample7Test >> testStrictRun [
 	self assert: methodsName size equals: 3.
 
 	self assert: methodsName first equals: 'example7.A7.main(String[])'.
-	self assert: methodsName second equals: 'example7.B7.method(String, A7)'.
+	self assert: methodsName second equals: 'example7.B7.method(T,A7)'.
 	self assert: methodsName third equals: 'example7.A7.endPoint()'
 ]

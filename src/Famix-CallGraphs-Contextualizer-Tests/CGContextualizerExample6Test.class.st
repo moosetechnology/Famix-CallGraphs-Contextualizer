@@ -15,7 +15,7 @@ CGContextualizerExample6Test >> testCollectTraceMethodsFrom [
 	self assert: methods size equals: 3.
 
 	methodsName := methods collect: [ :each | each mooseName ].
-
+	
 	self assert: methodsName first equals: 'example6.A6.main(String[])'.
 	self assert: methodsName second equals: 'example6.B6.method(A6)'.
 	self assert: methodsName third equals: 'example6.A6.endPoint()'

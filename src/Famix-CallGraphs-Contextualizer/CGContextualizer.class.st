@@ -85,9 +85,15 @@ CGContextualizer >> entryPoints: aCollection [
 
 { #category : 'as yet unclassified' }
 CGContextualizer >> findNodeFor: targetMethod from: currentNode in: aGraph [
+	"When extracting a parametric method, if compiled with -g, then we get the signature with parametric types like K or V, if compiled without -g, then we always get Object for parameters
+	In either case, we here accept a parametric method if it has the same name, and number of parameters"
 
-	^ currentNode callees detect: [ :each | each realMethod mooseName = targetMethod mooseName ] ifNone: [ nil ]
-	
+	^ currentNode callees
+		  detect: [ :each |
+				  each realMethod mooseName = targetMethod mooseName or: [
+						  targetMethod isParametricEntity and: [
+							  targetMethod name = each realMethod name and: [ targetMethod parameters size = each parameters size ] ] ] ]
+		  ifNone: [ nil ]
 ]
 
 { #category : 'formatting' }
