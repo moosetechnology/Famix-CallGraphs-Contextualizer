@@ -92,7 +92,7 @@ CGContextualizer >> findNodeFor: targetMethod from: currentNode in: aGraph [
 		  detect: [ :each |
 				  each realMethod mooseName = targetMethod mooseName or: [
 						  targetMethod isParametricEntity and: [
-							  targetMethod name = each realMethod name and: [ targetMethod parameters size = each parameters size ] ] ] ]
+							  targetMethod name = each realMethod name and: [ targetMethod parameters size = each realMethod parameters size ] ] ] ]
 		  ifNone: [ nil ]
 ]
 
