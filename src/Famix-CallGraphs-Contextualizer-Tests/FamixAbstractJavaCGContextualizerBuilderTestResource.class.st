@@ -63,25 +63,6 @@ FamixAbstractJavaCGContextualizerBuilderTestResource class >> externalSourcesFol
 ]
 
 { #category : 'accessing' }
-FamixAbstractJavaCGContextualizerBuilderTestResource class >> generateLibs [
-
-	| sourcesPath baseName libName command |
-	
-	sourcesPath := FamixCallGraphContextualizerBridge sources fullName.
-	baseName := self sourcePath asFileReference basename.
-	libName := 'libs' , baseName.
-
-	command := 'cd "' , sourcesPath , '" && mkdir -p ' , libName.
-	self externalSourcesFolders do: [ :each |
-			command := command , ' && javac ' , '"' , each pathString , '/*.java' , '" && jar cvf ' , libName , '/'
-			           , each basename , '.jar ' , each basename , '/*.class' ].
-
-
-	"3. Exécution"
-	LibC runCommand: command
-]
-
-{ #category : 'accessing' }
 FamixAbstractJavaCGContextualizerBuilderTestResource class >> javaExternalSourcesFolders [
 	"Return the java folder containing the sources to parse for those tests"
 

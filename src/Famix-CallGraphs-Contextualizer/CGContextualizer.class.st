@@ -54,8 +54,11 @@ CGContextualizer >> buildGraph [
 	graph ifNotNil: [ ^ graph ].
 	workspace := MooseWorkspace new mainModel: mainModel.
 	librariesModels do: [ :each | workspace addLibraryModel: each ].
+	self handleInferenceOn: graphBuilder with: workspace.
+	self flag: 'Workspace should create and clear cache themselves, when they do so, delete this part of code'.
+	workspace clearCache.
+	workspace createFullMMECache.
 
-	self createReflectivesHookOn: graphBuilder withWorkspace: workspace.
 
 	^ graph := workspace interModelModeDuring: [
 			           graphBuilder
@@ -68,12 +71,6 @@ CGContextualizer >> collectTraceMethodsFrom: aTraceModel [
 	"elements should be ordered by default"
 
 	^ (aTraceModel allWithType: FamixJTTrace) anyOne traceElements collect: [ :each | each method ]
-]
-
-{ #category : 'as yet unclassified' }
-CGContextualizer >> createReflectivesHookOn: aGraphBuilder withWorkspace: workspace [ 
-
-	self subclassResponsibility
 ]
 
 { #category : 'settings' }
@@ -115,6 +112,12 @@ CGContextualizer >> graph [
 CGContextualizer >> graphBuilder: aGraphBuilder [
 
 	graphBuilder := aGraphBuilder
+]
+
+{ #category : 'as yet unclassified' }
+CGContextualizer >> handleInferenceOn: aGraphBuilder with: workspace [ 
+
+	self subclassResponsibility
 ]
 
 { #category : 'as yet unclassified' }

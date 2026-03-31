@@ -6,23 +6,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-CGInferedContextualizer >> createReflectivesHookOn: aGraphBuilder withWorkspace: workspace [
+CGInferedContextualizer >> handleInferenceOn: aGraphBuilder with: workspace [
 
-	| elements |
-	elements := tracesModels flatCollect: [ :each | each allWithType: FamixJTTraceMethod ].
-
-
-	aGraphBuilder reflectiveHook: [ :node :builder |
-			workspace interModelModeDuring: [
-					| currentMooseName nextDynamicMethods |
-					currentMooseName := node realMethod mooseName.
-
-					"Extract the methods from the execution trace"
-					nextDynamicMethods := (elements
-						                       select: [ :element | element method mooseName = currentMooseName ]
-						                       thenCollect: [ :element | element next ifNotNil: #method ]) reject: #isNil.
-
-					"Construct graph edges for the identified dynamic callees."
-					nextDynamicMethods do: [ :eachMethod | "Stub is forced to false to guarantee continuous graph expansion"
-						node addCallee: (builder nodeForMethodSignature: eachMethod signature kind: eachMethod parentType stub: false) ] ] ]
+	tracesModels do: [ :each | workspace addLibraryModel: each ]
 ]

@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-CGStrictContextualizer >> createReflectivesHookOn: aGraphBuilder withWorkspace: workspace [ 
+CGStrictContextualizer >> handleInferenceOn: aGraphBuilder with: workspace [ 
 	"Nothing"
 
 	
