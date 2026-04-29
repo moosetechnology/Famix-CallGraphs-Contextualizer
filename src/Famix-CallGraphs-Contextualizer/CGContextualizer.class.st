@@ -132,7 +132,8 @@ CGContextualizer >> initialNodeFor: aGraph [
 CGContextualizer >> initialize [
 
 	graphBuilder := FamixJavaCHABuilder new.
-	tracedNodesPerTraceModel := Dictionary new
+	tracedNodesPerTraceModel := Dictionary new.
+	librariesModels := OrderedCollection new
 ]
 
 { #category : 'settings' }
