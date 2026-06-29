@@ -1,3 +1,18 @@
+"
+I offer a simple API for the detection and chaining of attack patterns within a call graph
+
+## Instantiation
+Use **`newOn: aCallGraph`** to link the parser directly to the target
+
+## Primary API
+
+| Methodology | Action |
+|---|----
+| `findAllPatterns` | Identifies all the known patterns on the graph |
+| `find<Name>Pattern` | Identifies a specific pattern (`<Name>`) |
+| `findPatternChainIn:` | Find pattern chains in the graph (unlimited depth) |
+| `findPatternChainIn:depth:` | Find pattern chains in the graph, with a strict depth restriction (`depth`) |
+"
 Class {
 	#name : 'CGPatternFinder',
 	#superclass : 'Object',
