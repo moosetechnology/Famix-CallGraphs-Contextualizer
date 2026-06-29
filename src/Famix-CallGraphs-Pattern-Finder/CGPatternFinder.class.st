@@ -94,11 +94,14 @@ CGPatternFinder >> findPatternChainIn: aCollection [
 CGPatternFinder >> findPatternChainIn: aCollection depth: depth [
 
 	| allPatterns result pathFinder |
-	result := OrderedCollection new.
+	"Use a Set to reduce possible duplications"
+	result := HashSet new.
 
-	allPatterns := aCollection isDictionary
+	"Reduce duplication on patterns by converting collection to a set"
+	allPatterns := (aCollection isDictionary
 		               ifTrue: [ aCollection values ]
-		               ifFalse: [ aCollection ].
+		               ifFalse: [ aCollection ]) asSet.
+		
 
 	pathFinder := (FamixCallGraphPathFinder newOn: graph withAllNodes: allNodes)
 		              depth: depth;
