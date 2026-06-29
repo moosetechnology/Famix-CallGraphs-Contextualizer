@@ -2,7 +2,8 @@ Class {
 	#name : 'CGPatternFinder',
 	#superclass : 'Object',
 	#instVars : [
-		'graph'
+		'graph',
+		'allNodes'
 	],
 	#category : 'Famix-CallGraphs-Pattern-Finder',
 	#package : 'Famix-CallGraphs-Pattern-Finder'
@@ -27,15 +28,15 @@ CGPatternFinder >> extendPaths: currentPaths withCalleesMatching: aString [
 ]
 
 { #category : 'patterns' }
-CGPatternFinder >> findAllOn: aGraph [
+CGPatternFinder >> findAllPatterns [
 
 	| res |
 	res := Dictionary new.
 
-	res at: 'getter-transform-transform-invoke' put: (self findGetterTransformerPatternOn: aGraph).
-	res at: '$Proxy-invoke' put: (self findProxyInvokePatternOn: aGraph).
-	res at: 'readObject-put-hash-hashCode-get' put: (self findReadObjectHashMapPatternOn: aGraph).
-	res at: 'readObject-toString-get' put: (self findReadObjectToStringGetterPatternOn: aGraph).
+	res at: 'getter-transform-transform-invoke' put: (self findGetterTransformerPattern).
+	res at: '$Proxy-invoke' put: (self findProxyInvokePattern).
+	res at: 'readObject-put-hash-hashCode-get' put: (self findReadObjectHashMapPattern).
+	res at: 'readObject-toString-get' put: (self findReadObjectToStringGetterPattern).
 	^ res
 ]
 
@@ -52,34 +53,34 @@ CGPatternFinder >> findCalleesOf: aNode IncludingInMethodName: aName [
 ]
 
 { #category : 'patterns' }
-CGPatternFinder >> findGetterTransformerPatternOn: aGraph [
+CGPatternFinder >> findGetterTransformerPattern [
 	"Finding pattern like: getter - transform - transform - invoke"
 
 	| paths |
-	paths := self findInitialNodesIncludingInMethodName: 'get' PathsIn: aGraph.
+	paths := self findInitialNodesIncludingInMethodName: 'get'.
 	paths := self extendPaths: paths withCalleesMatching: 'transform'.
 	paths := self extendPaths: paths withCalleesMatching: 'transform'.
 	^ self extendPaths: paths withCalleesMatching: 'invoke'
 ]
 
 { #category : 'helper' }
-CGPatternFinder >> findInitialGetterPathsIn: aGraph [
+CGPatternFinder >> findInitialGetterPaths [
 
-	^ (aGraph allNodes select: [ :node | node realMethod mooseName includesSubstring: 'get' ]) collect: [ :node |
+	^ (allNodes select: [ :node | node realMethod mooseName includesSubstring: 'get' ]) collect: [ :node |
 		  OrderedCollection with: node ]
 ]
 
 { #category : 'helper' }
-CGPatternFinder >> findInitialNodesIncludingInClassName: aString PathsIn: aGraph [
+CGPatternFinder >> findInitialNodesIncludingInClassName: aString [
 
-	^ (aGraph allNodes select: [ :node | node realMethod parentType name includesSubstring: aString ]) collect: [ :node |
+	^ (allNodes select: [ :node | node realMethod parentType name includesSubstring: aString ]) collect: [ :node |
 		  OrderedCollection with: node ]
 ]
 
 { #category : 'helper' }
-CGPatternFinder >> findInitialNodesIncludingInMethodName: aString PathsIn: aGraph [
+CGPatternFinder >> findInitialNodesIncludingInMethodName: aString [
 
-	^ (aGraph allNodes select: [ :node | node realMethod name includesSubstring: aString ]) collect: [ :node |
+	^ (allNodes select: [ :node | node realMethod name includesSubstring: aString ]) collect: [ :node |
 		  OrderedCollection with: node ]
 ]
 
@@ -99,13 +100,13 @@ CGPatternFinder >> findPatternChainIn: aCollection depth: depth [
 		               ifTrue: [ aCollection values ]
 		               ifFalse: [ aCollection ].
 
-	pathFinder := (FamixCallGraphPathFinder newOn: graph)
+	pathFinder := (FamixCallGraphPathFinder newOn: graph withAllNodes: allNodes)
 		              depth: depth;
 		              yourself.
 
 	allPatterns do: [ :startCollection |
 			allPatterns do: [ :endCollection |
-					startCollection == endCollection ifTrue: [
+					startCollection == endCollection ifFalse: [
 							startCollection do: [ :startPattern |
 									endCollection do: [ :endPattern |
 											(pathFinder findAllPathFrom: startPattern last to: endPattern first) do: [ :path |
@@ -115,20 +116,20 @@ CGPatternFinder >> findPatternChainIn: aCollection depth: depth [
 ]
 
 { #category : 'patterns' }
-CGPatternFinder >> findProxyInvokePatternOn: aGraph [
+CGPatternFinder >> findProxyInvokePattern [
 	"Finding pattern like: $Proxy - invoke"
 
 	| paths |
-	paths := self findInitialNodesIncludingInClassName: '$Proxy' PathsIn: aGraph.
+	paths := self findInitialNodesIncludingInClassName: '$Proxy'.
 	^ self extendPaths: paths withCalleesMatching: 'invoke'
 ]
 
 { #category : 'patterns' }
-CGPatternFinder >> findReadObjectHashMapPatternOn: aGraph [
+CGPatternFinder >> findReadObjectHashMapPattern [
 	"Finding pattern like: readObject - put - hash - hashCode - get"
 
 	| paths |
-	paths := self findInitialNodesIncludingInMethodName: 'readObject' PathsIn: aGraph.
+	paths := self findInitialNodesIncludingInMethodName: 'readObject'.
 	paths := self extendPaths: paths withCalleesMatching: 'put'.
 	paths := self extendPaths: paths withCalleesMatching: 'hash'.
 	paths := self extendPaths: paths withCalleesMatching: 'hashCode'.
@@ -136,11 +137,11 @@ CGPatternFinder >> findReadObjectHashMapPatternOn: aGraph [
 ]
 
 { #category : 'patterns' }
-CGPatternFinder >> findReadObjectToStringGetterPatternOn: aGraph [
+CGPatternFinder >> findReadObjectToStringGetterPattern [
 	"Finding pattern like: readObject - toString - get"
 
 	| paths |
-	paths := self findInitialNodesIncludingInMethodName: 'readObject' PathsIn: aGraph.
+	paths := self findInitialNodesIncludingInMethodName: 'readObject'.
 	paths := self extendPaths: paths withCalleesMatching: 'toString'.
 	^ self extendPaths: paths withCalleesMatching: 'get'
 ]
@@ -154,5 +155,7 @@ CGPatternFinder >> graph [
 { #category : 'as yet unclassified' }
 CGPatternFinder >> graph: aGraph [
 
-	graph := aGraph
+	graph := aGraph.
+	"Collecting all nodes in a simple collection to optimise the validity check of nodes"
+	allNodes := self graph allNodes
 ]
