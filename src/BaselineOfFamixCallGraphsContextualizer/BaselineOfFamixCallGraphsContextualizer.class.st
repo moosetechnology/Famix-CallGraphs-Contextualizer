@@ -9,18 +9,18 @@ Class {
 BaselineOfFamixCallGraphsContextualizer >> baseline: spec [
 
 	<baseline>
-	spec for: #common do: [ 
-			"Dependencies"
+	spec for: #common do: [ "Dependencies"
 			self gitBridge: spec.
 			self famixBridge: spec.
 			self famixCallGraphs: spec.
 			self famixJavaTrace: spec.
-			
+
 
 			"Packages"
 			spec
 				package: 'Famix-CallGraphs-Contextualizer';
-				package: 'Famix-CallGraphs-Contextualizer-Tests' with: [ spec requires: #( 'Famix-CallGraphs-Contextualizer' ) ].
+				package: 'Famix-CallGraphs-Contextualizer-Tests' with: [ spec requires: #( 'Famix-CallGraphs-Contextualizer' ) ];
+				package: 'Famix-CallGraphs-Contextualizer-Pattern-Finder'.
 
 			"Groups"
 			spec
