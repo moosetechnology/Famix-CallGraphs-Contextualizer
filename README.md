@@ -28,38 +28,46 @@ You need to load your models and build the static call graph before applying the
 
 Here an exemple as how you can do import theses informations :
 
-```
+```smalltalk
 "## Variables to define"
-origin := '/Users/.../.../Models/' asFileReference. 
-appPath := origin / 'App'.
-libraryPath := origin / 'Library'.
-stackPath := origin / 'JDIOutput.cs'
+origin := '/Users/.../.../Models/' asFileReference. "path to the sources"
+appPath := origin / 'App'. "sources of the target application"
+libraryPath := origin / 'Library'. "sources of the libraries used by the application"
+jdkPath := origin / 'sourcesJDK'. "sources of the Jdk used by the application"
+tracePath := origin / 'JDIOutput.tr' "serialized trace file"
 
 "## Import models"
-appModel := (FamixJavaFoldersImporter importFolder: appPath) first.
-libraryModel := (FamixJavaFoldersImporter importFolder: libraryPath) first.
-stackModel := CallStackJsonReader import: stackPath.
+appModel := FamixJavaFoldersImporter importFolder: appPath.
+libraryModel := FamixJavaFoldersImporter importFolder: libraryPath.
+traceModel := JavaTraceJsonReader import: tracePath.
+jdkModel := (FamixJavaFoldersImporter new
+                    folders: { jdkPath };
+                    jdkVersion: '1.7'; "version of the jdk to parse"
+                    import) first.
 ```
 
 ### 3. Contextualize the Graph
 
 Once you have your models, you just need to build your graph and apply your call stack on it
 
-```
+```smalltalk
+"0. Find the entry point of the application"
+entryVictimMethod := (appModel allModelMethods detect: [ :method |
+                                          method mooseName includesSubstring: 'App.main' ]).
 
 "1. Choose a contextualizer and give it theses informations"
 contextualizer := aContextualizerClass new
 		  mainModel: appModel;
-		  librariesModels: {libraryModel};
-		  entryPoints: { aFamixMethod }; "Entry point need to be a method of the appModel"
-		  callStackModels: { stackModel }.
+		  librariesModels: {libraryModel . jdkModel};
+		  entryPoints: { entryVictimMethod }; "Entry point need to be a method of the appModel"
+		  tracesModels: { traceModel }.
 
 "2. Run the contextualization, and if needed collect the graph created"
 contextualizer run.
 graph := contextualizer graph.
 
 "3. Check all nodes with additionnals properties"
-graph allNodesWithAdditionalProperties
+contextualizer tracedNodesPerTraceModel 
 ```
 
 ## Documentation
