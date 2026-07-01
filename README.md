@@ -11,7 +11,7 @@ Install the project in your Moose image via Metacello:
 ```smalltalk
 Metacello new
     baseline: 'FamixCallGraphsContextualizer';
-    githubUser: 'LeoDefossez' project: 'Famix-CallGraphs-Contextualizer' commitish: 'master' path: 'src';
+    githubUser: 'moosetechnology' project: 'Famix-CallGraphs-Contextualizer' commitish: 'master' path: 'src';
     load
 ```
 
