@@ -2,7 +2,7 @@
 
 **Inject dynamic execution context into static architectures.**
 
-This project bridges the gap between static analysis and runtime reality. It maps execution traces (derived from `FamixCallStack`) onto static call graphs (`Famix-CallGraphs`), allowing you to visualize not just what *can* happen, but what *actually* happened during a specific scenario.
+This project bridges the gap between static analysis and runtime reality. It maps execution traces (derived from [`Famix-JavaTrace`](https://github.com/moosetechnology/Famix-CallGraphs-Contextualizer)) onto static call graphs ([`Famix-CallGraphs`](https://github.com/moosetechnology/Famix-CallGraphs)), allowing you to visualize not just what *can* happen, but what *actually* happened during a specific scenario.
 
 ## Installation
 
@@ -21,7 +21,7 @@ Contextualization is a three-step process: **Extract, Load, Apply.**
 
 ### 1. Extract the Call Stack
 You must first generate a trace from the target application. Use the external extractor:
-* [JavaCallStackExtractor](https://github.com/moosetechnology/JavaCallStackExtractor) 
+* [JavaTraceExtractor](https://github.com/moosetechnology/JavaTraceExtractor) 
 
 ### 2. Prepare the Models
 You need to load your models and build the static call graph before applying the context.
