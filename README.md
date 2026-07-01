@@ -48,7 +48,14 @@ jdkModel := (FamixJavaFoldersImporter new
 
 ### 3. Contextualize the Graph
 
-Once you have your models, you just need to build your graph and apply your call stack on it
+Once you have your models, you just need to build your graph and apply your trace on it.
+
+**First choose which contextualizer you want to use, depending on your needs**
+|**Class**|**Matching type**|**Behavior**|
+|---|---|---|
+|CGStrictContextualizer| Infered |Stop the contextualization when nodes used in trace does not exists in the call graph |
+|CGInferedContextualizer|Infered|Creates missing nodes using `famix-bridge`|
+|CGInferedContextualizerReflectiveHook| Strict| Creates missing nodes using a hook offered by the `call-graph` contruction algoritm|
 
 ```smalltalk
 "0. Find the entry point of the application"
@@ -70,6 +77,17 @@ graph := contextualizer graph.
 contextualizer tracedNodesPerTraceModel 
 ```
 
-## Documentation
+
+## Pattern finding
+The class `CGPatternFinder` provides the core API for pattern detection and chaining within the call graph.
+
+| **Method** | **Description** |
+|---|---|
+| `findAllPatterns` | Identifies all known patterns in the graph. |
+| `find<Name>Pattern` | Identifies instances of a specific pattern (`<Name>`). |
+| `findPatternChainIn:` | Finds all pattern chains in the graph (unlimited depth). |
+| `findPatternChainIn:depth:` | Finds pattern chains up to a strictly defined maximum `depth`. |
+
+## More documentation
 
 * [User Documentation](resources/documentation/UserDocumentation.md)
