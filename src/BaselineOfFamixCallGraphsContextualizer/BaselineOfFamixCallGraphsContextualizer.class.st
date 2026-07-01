@@ -20,7 +20,7 @@ BaselineOfFamixCallGraphsContextualizer >> baseline: spec [
 			spec
 				package: 'Famix-CallGraphs-Contextualizer';
 				package: 'Famix-CallGraphs-Contextualizer-Tests' with: [ spec requires: #( 'Famix-CallGraphs-Contextualizer' ) ];
-				package: 'Famix-CallGraphs-Contextualizer-Pattern-Finder'.
+				package: 'Famix-CallGraphs-Pattern-Finder'.
 
 			"Groups"
 			spec
