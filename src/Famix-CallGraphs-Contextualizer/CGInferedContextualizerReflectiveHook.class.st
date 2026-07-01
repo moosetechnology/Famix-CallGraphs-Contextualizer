@@ -1,3 +1,6 @@
+"
+This class contextualizes a call graph using a infered matching algorithm. If the target call graph lacks any methods present in the execution trace, this algorithm will create the missing node, using a hook offered by the call graph algorithm.
+"
 Class {
 	#name : 'CGInferedContextualizerReflectiveHook',
 	#superclass : 'CGContextualizer',
